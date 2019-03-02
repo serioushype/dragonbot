@@ -1,0 +1,5 @@
+{
+    "name": "owner",
+    "description": "Module for bot owner management and config changing.",
+    "main": "main.js"
+}

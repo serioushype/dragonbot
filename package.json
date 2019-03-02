@@ -1,0 +1,34 @@
+{
+  "name": "dragonbot",
+  "version": "1.0.0",
+  "description": "Dragon bot is customizable discord bot made with Node JS(JavaScript(Not Java)), which makes people customize most of the stuff without coding.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node launcher.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CreatorVilius/DragonBot.git"
+  },
+  "keywords": [
+    "dragon",
+    "bot",
+    "discord",
+    "js",
+    "node",
+    "javascript",
+    "fast",
+    "customizable",
+    "modules",
+    "plugins"
+  ],
+  "author": "idkgoodname",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CreatorVilius/DragonBot/issues"
+  },
+  "homepage": "https://github.com/CreatorVilius/DragonBot#readme",
+  "dependencies": {
+    "discord.js": "^11.4.2"
+  }
+}

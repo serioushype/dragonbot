@@ -1,0 +1,5 @@
+{
+    "name": "general",
+    "description": "Help, Ping and other Random commands.",
+    "main": "main.js"
+}
