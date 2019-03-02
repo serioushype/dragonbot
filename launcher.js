@@ -17,6 +17,7 @@ function begin() {
     ]
     console.log(`\x1b[1;31m${message.join('\n')}\x1b[0m`)
     console.log([
+        `\x1b[31m[0]:\x1b[0m Start`,
         `\x1b[31m[1]:\x1b[0m Information`,
         `\x1b[31m[2]:\x1b[0m Update`,
         `\x1b[31m[3]:\x1b[0m Setup`,
@@ -25,6 +26,9 @@ function begin() {
     rl.question('> ', o => {
         rl.close()
         switch(o) {
+            case '0':
+                Start()
+                break
             case '1':
                 Information()
                 break
@@ -131,5 +135,9 @@ function setup() {
         })
     }
     colour()
+}
+function Start() {
+    console.clear()
+    require('./index.js')
 }
 begin()
