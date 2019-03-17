@@ -90,7 +90,7 @@ const commands = {
                     .setAuthor(`Help (${parseInt(i) + 1}/${newPlugs.length})`, client.user.avatarURL)
                     .setFooter(`Used by: ${msg.author.tag}`, msg.author.avatarURL)
                     .setColor(`#${getColour()}`)
-                p.forEach(m => embed.addField(m[0], m[1].trim() !== '' ? m[1] : 'No commands in this plugin.'))
+                p.forEach(m => embed.addField(m[0], m[1].trim() !== '' ? m[1] : 'No commands in this plugin.', true))
                 msg.author.send(embed)
             }
             msg.channel.send(`:thumbsup: Sent it in the **DMs**.`)
@@ -99,7 +99,7 @@ const commands = {
     colour: new Command({
         name: 'colour',
         description: 'Generates random colour.',
-        usage: 'colour <colour>',
+        usage: 'colour',
         fn(msg, args) {
             function random() {
                 let r = Math.floor(Math.random() * 255) + 1
@@ -130,30 +130,53 @@ const commands = {
             .setFooter(`Used by: ${msg.author.tag}`, msg.author.avatarURL)
             .setColor(`#${getColour()}`))
             const answer = [`It is certain.`,
-            `It is decidedly so.`,
-            `Without a doubt.`,
-            `Yes - definitely.`,
-            `You may rely on it.`,
-            `As I see it, yes.`,
-            `Most likely.`,
-            `Outlook good.`,
-            `Yes.`,
-            `Signs point to yes.`,
-            `Reply hazy, try again.`,
-            `Ask again later.`,
-            `Better not tell you now.`,
-            `Cannot predict now.`,
-            `Concentrate and ask again.`,
-            `Don't count on it.`,
-            `My reply is no.`,
-            `My sources say no.`,
-            `Outlook not so good.`,
-            `Very doubtful.`]
+                `It is decidedly so.`,
+                `Without a doubt.`,
+                `Yes - definitely.`,
+                `You may rely on it.`,
+                `As I see it, yes.`,
+                `Most likely.`,
+                `Outlook good.`,
+                `Yes.`,
+                `Signs point to yes.`,
+                `Reply hazy, try again.`,
+                `Ask again later.`,
+                `Better not tell you now.`,
+                `Cannot predict now.`,
+                `Concentrate and ask again.`,
+                `Don't count on it.`,
+                `My reply is no.`,
+                `My sources say no.`,
+                `Outlook not so good.`,
+                `Very doubtful.`]
             msg.channel.send(new Discord.RichEmbed()
             .setAuthor(`8ball`, client.user.avatarURL)
             .setDescription(`:8ball: ${answer[Math.floor(Math.random() * answer.length)] || 'Of course.'}`)
             .setFooter(`Used by: ${msg.author.tag}`, msg.author.avatarURL)
             .setColor(`#${getColour()}`))
+        }
+    }),
+    userinfo: new Command({
+        name: 'userinfo',
+        description: 'Returns information about specific member.',
+        usage: 'userinfo <user>',
+        /**
+         * @param {Discord.Message} msg
+         */
+        fn(msg, args) {
+            const u = msg.mentions.members.first() || msg.guild.members.find(u => u.id === (args.join(' ').match(/[0-9]+/) ? args.join(' ').match(/[0-9]+/)[0] : null)) || msg.member
+            const ucd = u.user.createdAt
+            const ujd = u.joinedAt
+            msg.channel.send(new Discord.RichEmbed()
+                .setAuthor(u.user.tag, client.user.avatarURL)
+                .setDescription(`Stats for user.`)
+                .setThumbnail(u.user.avatarURL)
+                .addField(`Current status`, u.user.presence.status, true)
+                .addField(`Registered`, `${ucd.getUTCDay()}/${ucd.getUTCMonth()}/${ucd.getFullYear()} ${ucd.getHours()}:${ucd.getMinutes()}:${ucd.getSeconds()}`, true)
+                .addField(`Joined`, `${ujd.getUTCDay()}/${ujd.getUTCMonth()}/${ujd.getFullYear()} ${ujd.getHours()}:${ujd.getMinutes()}:${ujd.getSeconds()}`, true)
+                .addField(`Last Message`, `${u.lastMessage.content}`, true)
+                .setFooter(`Used by: ${msg.author.tag}`, msg.author.avatarURL)
+                .setColor(u.displayHexColor !== '#000000' ? u.displayHexColor : null || `#595959`))
         }
     })
 }

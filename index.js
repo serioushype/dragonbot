@@ -60,17 +60,15 @@ function disableCommand(command, plugin = '') {
     const c = command.split(/[\n\r\t ]/gm).join('')
     if(disComs.filter(a => p === '' && a === c || a[0] === p && a[1] === c).length === 0) p === '' ? disComs.push(c) : disComs.push([p, c])
 }
-client.on('ready', () => {
-    console.log(`${getTheme(true)}[Client]:\x1b[0m Connected to discord.\n - ${getTheme()}ID:\x1b[0m ${client.user.id}\n - ${getTheme()}Tag:\x1b[0m ${client.user.tag}\n - ${getTheme()}Invite:\x1b[0m https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot`)
-})
-client.on('disconnect', () => {
-    console.log(`${getTheme(true)}[Client]:\x1b[0m Client disconnected.`)
-})
+client.on('ready', () => console.log(`${getTheme(true)}[Client]:\x1b[0m Connected to discord.\n - ${getTheme()}ID:\x1b[0m ${client.user.id}\n - ${getTheme()}Tag:\x1b[0m ${client.user.tag}\n - ${getTheme()}Invite:\x1b[0m https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot`))
+client.on('guildCreate', g => console.log(`${getTheme(true)}[Discord]:\x1b[0m Client joined guild.\n - ${getTheme()}ID:\x1b[0m ${g.id}\n - ${getTheme()}Name:\x1b[0m ${g.name}\n - ${getTheme()}Member count:\x1b[0m ${g.memberCount}`))
+client.on('guildDelete', g => console.log(`${getTheme(true)}[Discord]:\x1b[0m Client left guild.\n - ${getTheme()}ID:\x1b[0m ${g.id}\n - ${getTheme()}Name:\x1b[0m ${g.name}\n - ${getTheme()}Member count:\x1b[0m ${g.memberCount}`))
+client.on('disconnect', () => console.log(`${getTheme(true)}[Client]:\x1b[0m Client disconnected.`))
 client.on('message', m => {
     if(!m.guild || m.author.bot) return
     const {plugins, prefix} = require('./config/config.json')
     const general = require('./config/general.json')
-    const pfx = !!general[m.guild.id] && !!general[m.guild.id].prefix !== null ? general[m.guild.id].prefix : prefix
+    const pfx = !!general[m.guild.id] && general[m.guild.id].prefix !== null ? general[m.guild.id].prefix : prefix
     if(m.content.startsWith(pfx)) {
         const [command, ...args] = m.content.slice(pfx.length).split(' ')
         fs.readdirSync('./plugins').filter(f => fs.statSync(`./plugins/${f}`).isDirectory()).forEach(p => {

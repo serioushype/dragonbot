@@ -25,7 +25,7 @@ There are different ways to start a bot.
 
 > ## Links
 
-- [Installing]()
-- [How to ?]()
-- [Making a plugin]()
+- [Installing](https://github.com/CreatorVilius/dragonbot/wiki/Installing-Dragon-Bot)
+- [How to ?](https://github.com/CreatorVilius/dragonbot/wiki#how-tos)
+- [Making a plugin](https://github.com/CreatorVilius/dragonbot/wiki/Make-a-plugin)
 - [Discord server]()

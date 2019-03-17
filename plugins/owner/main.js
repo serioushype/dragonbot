@@ -4,6 +4,8 @@ const Discord = require('discord.js')
 const fs = require('fs')
 const path = require('path')
 const {client, getColour, getTheme} = require('../../index.js')
+const Module = require('./moduleManager.js')
+const config = require('../../config/config.json')
 
 const commands = {
     config: new Command({
@@ -16,7 +18,6 @@ const commands = {
          * @param {string[]} args
          */
         fn(msg, args) {
-            const config = require('../../config/config.json')
             const {owner, mods} = config
             if(msg.author.id !== owner && !mods.includes(msg.author.id)) return
             switch(args[0]) {
@@ -135,6 +136,112 @@ const commands = {
                         .addField(`theme`, `Changes bot's theme.\n**usage:** config theme {red | green | yellow | blue | purple | cyan}`)
                         .addField(`owner`, `Changes bot's owner id.\n**usage:** config owner [id]`)
                         .addField(`token`, `Changes bot's token.\n**usage:** config token [token]`))
+                    break
+            }
+        }
+    }),
+    plugin: new Command({
+        name: 'plugin',
+        description: 'Manages plugins.',
+        usage: 'plugin [add/remove/list/enable/disable] <...args>',
+        access: 'private',
+        /**
+         * 
+         * @param {Discord.Message} msg 
+         * @param {string[]} args 
+         */
+        fn(msg, args) {
+            const {owner} = config
+            if(msg.author.id !== owner) return
+            switch(args[0]) {
+                case 'add':
+                    const repo = args[1]
+                    const dir = args.slice(2).join(' ').replace(/[.][/]/gm, '')
+                    try {
+                        new Module(repo, dir)
+                        msg.channel.send(new Discord.RichEmbed()
+                            .setAuthor(`Plugin installed`, client.user.avatarURL)
+                            .setDescription(`Plugin '${dir}' installed.`)
+                            .setFooter(`Used by: ${msg.author.tag}`, msg.author.avatarURL)
+                            .setColor(`#${getColour()}`))
+                    } catch(e) {
+                        msg.channel.send(new Discord.RichEmbed()
+                            .setAuthor(`Error`, client.user.avatarURL)
+                            .setDescription(e)
+                            .setFooter(`Used by: ${msg.author.tag}`, msg.author.avatarURL)
+                            .setColor(`#${getColour()}`))
+                        console.log(`${getTheme(true)}[Git]:\x1b[0m ${e}`)
+                    }
+                    break
+                case 'remove':
+                    const plug = args.slice(1).join(' ').trim().replace(/[.][/]|.[:]/gm, '')
+                    if(!fs.existsSync(path.join(__dirname, `../${plug}`)) || !fs.statSync(path.join(__dirname, `../${plug}`)).isDirectory()) return msg.channel.send(new Discord.RichEmbed()
+                        .setAuthor(`Error`, client.user.avatarURL)
+                        .setDescription(`That plugin doesn't exist, or it isn't a plugin.`)
+                        .setFooter(`Used by: ${msg.author.tag}`, msg.author.avatarURL)
+                        .setColor(`#${getColour()}`))
+                    Module.deleteUnemptyDir(path.join(__dirname, `../${plug}`))
+                    msg.channel.send(new Discord.RichEmbed()
+                        .setAuthor(`Plugin removed`, client.user.avatarURL)
+                        .setDescription(`Plugin '${plug}' was removed.`)
+                        .setFooter(`Used by: ${msg.author.tag}`, msg.author.avatarURL)
+                        .setColor(`#${getColour()}`))
+                    break
+                case 'list':
+                    const dirpath = path.join(__dirname, '..')
+                    const allplug = fs.readdirSync(dirpath).filter(f => fs.statSync(path.join(dirpath, f)).isDirectory())
+                    const eplug = allplug.filter(p => config.plugins.includes(p))
+                    const dplug = allplug.filter(p => !eplug.includes(p))
+                    msg.channel.send(new Discord.RichEmbed()
+                        .setAuthor(`Plugin list`, client.user.avatarURL)
+                        .setDescription(`Enabled and disable plugin list.`)
+                        .addField(`Enabled`, `${eplug.join(', ') || 'No plugins are enabled.'}`)
+                        .addField(`Disabled`, `${dplug.join(', ') || 'No plugins are disabled.'}`)
+                        .setFooter(`Used by: ${msg.author.tag}`, msg.author.avatarURL)
+                        .setColor(`#${getColour()}`))
+                    break
+                case 'enable':
+                    const _plug = args.slice(1).join(' ')
+                    if(!fs.existsSync(path.join(__dirname, `../${_plug}`)) || !fs.statSync(path.join(__dirname, `../${_plug}`)).isDirectory()) return msg.channel.send(new Discord.RichEmbed()
+                        .setAuthor(`Error`, client.user.avatarURL)
+                        .setDescription(`That plugin doesn't exist, or it isn't a plugin.`)
+                        .setFooter(`Used by: ${msg.author.tag}`, msg.author.avatarURL)
+                        .setColor(`#${getColour()}`))
+                    if(config.plugins.includes(_plug)) return msg.channel.send(new Discord.RichEmbed()
+                        .setAuthor(`Error`, client.user.avatarURL)
+                        .setDescription(`Plugin already enabled.`)
+                        .setFooter(`Used by: ${msg.author.tag}`, msg.author.avatarURL)
+                        .setColor(`#${getColour()}`))
+                    config.plugins.push(_plug)
+                    fs.writeFileSync(path.join(__dirname, '../../config/config.json'), JSON.stringify(config, null, 4), 'utf8')
+                    msg.channel.send(new Discord.RichEmbed()
+                        .setAuthor(`Enabled`, client.user.avatarURL)
+                        .setDescription(`Plugin '${_plug}' was enabled.`)
+                        .setFooter(`Used by: ${msg.author.tag}`, msg.author.avatarURL)
+                        .setColor(`#${getColour()}`))
+                    break
+                case 'disable':
+                    const $plug = args.slice(1).join(' ')
+                    if(!fs.existsSync(path.join(__dirname, `../${$plug}`)) || !fs.statSync(path.join(__dirname, `../${$plug}`)).isDirectory()) return msg.channel.send(new Discord.RichEmbed()
+                        .setAuthor(`Error`, client.user.avatarURL)
+                        .setDescription(`That plugin doesn't exist, or it isn't a plugin.`)
+                        .setFooter(`Used by: ${msg.author.tag}`, msg.author.avatarURL)
+                        .setColor(`#${getColour()}`))
+                    if(!config.plugins.includes($plug)) return msg.channel.send(new Discord.RichEmbed()
+                        .setAuthor(`Error`, client.user.avatarURL)
+                        .setDescription(`Plugin already disabled.`)
+                        .setFooter(`Used by: ${msg.author.tag}`, msg.author.avatarURL)
+                        .setColor(`#${getColour()}`))
+                    config.plugins = config.plugins.filter(p => p !== $plug)
+                    fs.writeFileSync(path.join(__dirname, '../../config/config.json'), JSON.stringify(config, null, 4), 'utf8')
+                    msg.channel.send(new Discord.RichEmbed()
+                        .setAuthor(`Disabled`, client.user.avatarURL)
+                        .setDescription(`Plugin '${$plug}' was disabled.`)
+                        .setFooter(`Used by: ${msg.author.tag}`, msg.author.avatarURL)
+                        .setColor(`#${getColour()}`))
+                    break
+                default:
+                    
                     break
             }
         }

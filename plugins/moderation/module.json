@@ -1,0 +1,5 @@
+{
+    "name": "moderation",
+    "description": "Moderation commands, such as ban, kick, purge, etc.",
+    "main": "main.js"
+}
