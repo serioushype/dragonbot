@@ -13,7 +13,7 @@ Dragon bot is general purpose, open-source, customizable bot for discord. Dragon
 
 If you want to help Dragon bot, you can do one of them:
 - Report a bugs & Suggest new features
-- Commit changes(If you ant to get contributor, you can DM IdkGoodName(me) through my discord server(which is below)).
+- Commit changes(If you want to get contributor, you can DM IdkGoodName(me) through my discord server(which is below)).
 - Help others, by answering questions in Issues, or Discord server.
 
 > ## Usage
@@ -28,4 +28,4 @@ There are different ways to start a bot.
 - [Installing](https://github.com/CreatorVilius/dragonbot/wiki/Installing-Dragon-Bot)
 - [How to ?](https://github.com/CreatorVilius/dragonbot/wiki#how-tos)
 - [Making a plugin](https://github.com/CreatorVilius/dragonbot/wiki/Make-a-plugin)
-- [Discord server]()
+- [Discord server](https://discord.gg/K3czxrJ) (This server is not related to Dragon bot, but that's from where you can contact me(I don't like being added as friend from person I don't know).)
